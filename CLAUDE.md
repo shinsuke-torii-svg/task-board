@@ -6,11 +6,41 @@
 
 Vite + React で構築したタスク管理ボードアプリケーション。
 
+## デプロイ先
+
+- **本番 URL**: https://shinsuke-torii-svg.github.io/task-board/
+- **ホスティング**: GitHub Pages
+- **CI/CD**: GitHub Actions (`.github/workflows/deploy.yml`)
+  - `main` ブランチへのプッシュで自動デプロイ
+
 ## 技術スタック
 
 - **フレームワーク**: React 19
 - **ビルドツール**: Vite 8
 - **言語**: JavaScript (JSX)
+- **スタイリング**: CSS Modules なし（単一の `App.css` + `index.css`）
+- **状態管理**: React `useState` / `useRef` / `useEffect`（外部ライブラリなし）
+- **永続化**: `localStorage`（キー: `task-board-tasks`）
+
+## コンポーネント構成
+
+現在はシングルコンポーネント構成。
+
+```
+src/
+├── main.jsx      # エントリーポイント（React DOM マウントのみ）
+├── App.jsx       # アプリ全体のロジックと UI
+├── App.css       # App コンポーネントのスタイル
+└── index.css     # グローバルリセット・body スタイル
+```
+
+## コンポーネント命名規約
+
+- **ファイル名**: PascalCase（例: `TaskItem.jsx`, `AddTaskForm.jsx`）
+- **コンポーネント関数名**: ファイル名と同一の PascalCase
+- **CSS クラス名**: kebab-case（例: `.task-item`, `.add-btn`, `.board-title`）
+- **定数**: UPPER_SNAKE_CASE（例: `STORAGE_KEY`）
+- **イベントハンドラ**: `handle` プレフィックス（例: `handleKeyDown`, `handleSubmit`）
 
 ## 開発コマンド
 
