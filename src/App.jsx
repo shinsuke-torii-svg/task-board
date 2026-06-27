@@ -1,16 +1,30 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 
-let nextId = 1
+const STORAGE_KEY = 'task-board-tasks'
+
+function loadTasks() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY)
+    return saved ? JSON.parse(saved) : []
+  } catch {
+    return []
+  }
+}
 
 function App() {
-  const [tasks, setTasks] = useState([])
+  const [tasks, setTasks] = useState(loadTasks)
   const [inputValue, setInputValue] = useState('')
+  const nextId = useRef(Math.max(0, ...tasks.map(t => t.id)) + 1)
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+  }, [tasks])
 
   const addTask = () => {
     const text = inputValue.trim()
     if (!text) return
-    setTasks([...tasks, { id: nextId++, text, completed: false }])
+    setTasks(prev => [...prev, { id: nextId.current++, text, completed: false }])
     setInputValue('')
   }
 
@@ -19,11 +33,11 @@ function App() {
   }
 
   const toggleTask = (id) => {
-    setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t))
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t))
   }
 
   const deleteTask = (id) => {
-    setTasks(tasks.filter(t => t.id !== id))
+    setTasks(prev => prev.filter(t => t.id !== id))
   }
 
   const remaining = tasks.filter(t => !t.completed).length
